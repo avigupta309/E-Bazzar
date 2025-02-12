@@ -11,7 +11,6 @@ export default function Product({ submittedSearch, setselectedCart }) {
   useEffect(() => {
     fetch("https://dummyjson.com/products/category-list").then((response) => {
       response.json().then((data) => {
-     
         setCategory(data);
       });
     });
@@ -120,11 +119,10 @@ export default function Product({ submittedSearch, setselectedCart }) {
         </div>
 
         <div className="container">
-          <img className="Advertisement" src="/adver.png"/>
+          <img className="Advertisement" src="/bg-image.jpg" />
           <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-5 gap-x-5 justify-center items-center  w-screen">
             {productItems}
           </div>
-         
         </div>
       </div>
     </>

@@ -6,6 +6,9 @@ import Product from "./Product";
 function App() {
   const [submittedSearch, setSubmittedSearch] = useState("");
   const [selectedCart, setselectedCart] = useState("");
+
+  // const[CartSelected,setCartSelected]=useState([]);
+
   return (
     <>
       <Header

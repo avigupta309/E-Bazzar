@@ -135,7 +135,7 @@ export default function Header({ setSubmittedSearch, selectedCart }) {
                     <div className="card-actions">
                       <Link to={"/cart"}>
                         <button className="btn btn-primary btn-block">
-                          View cart
+                          view items
                         </button>
                       </Link>
                     </div>

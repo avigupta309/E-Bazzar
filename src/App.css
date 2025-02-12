@@ -1,0 +1,101 @@
+ul li:hover {
+  background-color: rgb(227, 207, 207);
+  text-decoration: underline yellow;
+  color: blue;
+}
+
+.category {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  top: auto;
+  padding: 1rem;
+  transition: 1s;
+}
+
+.hide-category {
+  position: absolute;
+  z-index: 5;
+  left: -200rem;
+  top: auto;
+  padding: 1rem;
+  transition: 3s;
+}
+.Advertisement {
+  height: 60vh;
+  width: 100%;
+  position: relative;
+  bottom: 1.5rem;
+}
+
+.dropdown-content {
+  z-index: 6;
+}
+
+@media (max-width: 720px) {
+  .dropdown .btn:active {
+    background-color: gainsboro;
+  }
+  .dropdown .btn {
+    color: black;
+    font-size: 10px;
+    padding: 2px;
+    height: 2rem;
+    background-color: whitesmoke;
+    border: none;
+    outline: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .navbar h1:active {
+    background-color: whitesmoke;
+  }
+  .navbar h1 {
+    color: red;
+    font-size: 15px;
+    padding: 2px;
+    height: 2rem;
+    border: none;
+    outline: none;
+    position: relative;
+    right: 2rem;
+  }
+}
+
+@media (max-width: 720px) {
+  form .input {
+    position: relative;
+    right: 2.5rem;
+  }
+  form input {
+    width: 7rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .indicator svg {
+    position: relative;
+    left:3rem;
+    width: 3rem;
+    /* background-color: red; */
+  }
+}
+
+@media (max-width: 720px) {
+  .Advertisement {
+    height: 10rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .grid .card {
+    width: 26rem;
+    background-color: rgb(238, 241, 246);
+  }
+  .indicator .badge {
+    position: absolute;
+    left:4rem;
+    /* background-color: red; */
+  }
+}

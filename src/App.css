@@ -26,6 +26,7 @@ ul li:hover {
   width: 100%;
   position: relative;
   bottom: 1.5rem;
+  object-fit: cover;
 }
 
 .dropdown-content {
@@ -76,7 +77,7 @@ ul li:hover {
 @media (max-width: 720px) {
   .indicator svg {
     position: relative;
-    left:3rem;
+    left: 3rem;
     width: 3rem;
     /* background-color: red; */
   }
@@ -95,7 +96,7 @@ ul li:hover {
   }
   .indicator .badge {
     position: absolute;
-    left:4rem;
+    left: 4rem;
     /* background-color: red; */
   }
 }

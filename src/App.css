@@ -26,6 +26,7 @@ ul li:hover {
   width: 100%;
   position: relative;
   bottom: 1.5rem;
+  /* background-size: cover; */
 }
 
 .dropdown-content {

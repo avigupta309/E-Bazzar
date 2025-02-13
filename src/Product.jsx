@@ -75,7 +75,7 @@ export default function Product({ submittedSearch, setselectedCart }) {
               }}
               className="btn btn-sm btn-primary"
             >
-              Add to Cart
+              Added to Cart 
             </button>
           </div>
         </div>

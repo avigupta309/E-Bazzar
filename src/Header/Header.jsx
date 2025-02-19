@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
-export default function Header({ setSubmittedSearch, selectedCart }) {
+export default function Header({ setSubmittedSearch, selectedCart,setCartData ,deleting}) {
   const [searchValue, setSearchValue] = useState("");
   const [cartItems, setCartItems] = useState([]);
   const [amount, setAmount] = useState(0);
@@ -11,8 +12,16 @@ export default function Header({ setSubmittedSearch, selectedCart }) {
     const storedCartItems = JSON.parse(localStorage.getItem("items"));
     if (storedCartItems) {
       setCartItems(storedCartItems);
+      setCartData(storedCartItems)
     }
   }, []);
+
+  useEffect(()=>{
+    if(deleting!==undefined){
+       setCartItems(deleting)
+    }
+  },[deleting])
+ 
 
   useEffect(() => {
     if (cartItems.length > 0) {
@@ -25,12 +34,24 @@ export default function Header({ setSubmittedSearch, selectedCart }) {
         0
       );
       setAmount(parseFloat(totalAmount.toFixed(2)));
+      setCartData(cartItems)
     }
   }, [cartItems]);
+  // console.log(cartItems)
 
   useEffect(() => {
+    
     if (selectedCart !== "") {
-      setCartItems([...cartItems, selectedCart]);
+      const check = cartItems.find((val) => val == selectedCart);
+      if (check) {
+        toast.error("You Have Already Added In Cart ")
+      } else {
+        setCartItems([...cartItems, selectedCart]);
+        setTimeout(() => {
+          toast.success(cartItems.title+" Successfully Added!");
+        }, 100);
+        
+      }
     }
     //eslint-disable-next-line
   }, [selectedCart]);
@@ -41,6 +62,7 @@ export default function Header({ setSubmittedSearch, selectedCart }) {
   }
   return (
     <>
+    <ToastContainer/>
       <header className=" sticky top-0 z-10 w-screen">
         <nav className="mb-5 w-full">
           <div className="navbar bg-yellow-500 p-6 shadow-sm  flex justify-between">
@@ -174,8 +196,6 @@ export default function Header({ setSubmittedSearch, selectedCart }) {
           </div>{" "}
         </nav>
       </header>
-
-      {/* <TimePass cartItems={cartItems}/> */}
     </>
   );
 }

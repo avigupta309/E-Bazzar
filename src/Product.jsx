@@ -1,7 +1,6 @@
 import axios from "axios";
 import "react-notifications/lib/notifications.css";
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
 export default function Product({ submittedSearch, setselectedCart }) {
@@ -17,10 +16,10 @@ export default function Product({ submittedSearch, setselectedCart }) {
   }, []);
 
   const [items, setItems] = useState([]);
+  
   function cartFun(data) {
     setselectedCart(data);
 
-    toast.success(data.title + " Added in Cart Sucessfully ");
   }
 
   useEffect(() => {
@@ -44,7 +43,6 @@ export default function Product({ submittedSearch, setselectedCart }) {
   }, [submittedSearch]);
 
   function selectCategory(category) {
-    console.log(category);
     fetch(`https://dummyjson.com/products/category/${category}`).then(
       (response) => {
         response.json().then((data) => {
@@ -75,7 +73,7 @@ export default function Product({ submittedSearch, setselectedCart }) {
               }}
               className="btn btn-sm btn-primary"
             >
-              Added to Cart 
+              Added to Cart
             </button>
           </div>
         </div>
@@ -97,7 +95,6 @@ export default function Product({ submittedSearch, setselectedCart }) {
   });
   return (
     <>
-      <ToastContainer />
       <div className="container flex justify-center">
         <div className="dropdown ">
           <div
@@ -119,7 +116,7 @@ export default function Product({ submittedSearch, setselectedCart }) {
         </div>
 
         <div className="container">
-          <img className="Advertisement" src="/bg-image.jpg" />
+          <img className="Advertisement" src="bg-image.jpg" />
           <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-5 gap-x-5 justify-center items-center  w-screen">
             {productItems}
           </div>

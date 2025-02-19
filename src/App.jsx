@@ -3,7 +3,8 @@ import "./App.css";
 import Header from "./Header/Header";
 import Product from "./Product";
 
-function App() {
+// eslint-disable-next-line react/prop-types
+function App({setCartData,deleting}) {
   const [submittedSearch, setSubmittedSearch] = useState("");
   const [selectedCart, setselectedCart] = useState("");
 
@@ -14,10 +15,13 @@ function App() {
       <Header
         setSubmittedSearch={setSubmittedSearch}
         selectedCart={selectedCart}
+        setCartData={setCartData}
+        deleting={deleting}
       />
       <Product
         submittedSearch={submittedSearch}
         setselectedCart={setselectedCart}
+       
       />
     </>
   );

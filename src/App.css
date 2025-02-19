@@ -1,7 +1,10 @@
-ul li:hover {
+.container ul li:hover {
   background-color: rgb(227, 207, 207);
   text-decoration: underline yellow;
   color: blue;
+}
+li{
+  cursor: pointer;
 }
 
 .category {
@@ -26,7 +29,7 @@ ul li:hover {
   width: 100%;
   position: relative;
   bottom: 1.5rem;
-  /* background-size: cover; */
+  background-size: cover;
 }
 
 .dropdown-content {

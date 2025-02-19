@@ -1,57 +1,66 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
-export default function CartSection() {
+// eslint-disable-next-line react/prop-types
+export default function CartSection({ cartData = [], setDeleting }) {
+  const [cartBox, setCartBox] = useState([]);
+  // const[deleting,setDeleting]=useState();
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("storeCartItems"));
+    if (storedCart) {
+      setCartBox(storedCart);
+    }
+  }, []);
+  useEffect(() => {
+    if (cartData.length > 0) {
+      setCartBox(cartData);
+      localStorage.setItem("storeCartItems", JSON.stringify(cartBox));
+    }
+  }, [cartData, cartBox]);
+
+  function deletingFun(val) {
+    //setDeleting(val.id)
+    const afterDeletingCart = cartBox.filter((data) => data.id !== val.id);
+    setCartBox(afterDeletingCart);
+    localStorage.setItem("storeCartItems", JSON.stringify(afterDeletingCart));
+    setDeleting(afterDeletingCart);
+  }
+  const [amount, setAmount] = useState(0);
+  const[discountAmount,setDiscountAmount]=useState(0)
+  useEffect(() => {
+    if (cartBox.length > 0) {
+      const totalAmount = cartBox.reduce((acc, val) => acc + val.price, 0);
+      setAmount(parseFloat(totalAmount.toFixed(2)));
+    } else {
+      setAmount(0); // Reset when cart is empty
+    }
+   
+  }, [cartBox]);
+
+  useEffect(()=>{
+    if(amount>=1000){
+      const discountRate=amount/10
+      const actualAmount=amount-(parseFloat(discountRate.toFixed(2)))
+      setDiscountAmount(actualAmount)
+
+    }
+  },[amount])
   return (
     <>
+    <ToastContainer/>
       <div className="navbar bg-yellow-400 shadow-sm">
-        <div className="navbar-start">
-          <div className="dropdown">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                {" "}
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h7"
-                />{" "}
-              </svg>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-            >
-              <li>
-                <a>Homepage</a>
-              </li>
-              <li>
-                <a>Portfolio</a>
-              </li>
-              <li>
-                <a>About</a>
-              </li>
-            </ul>
-          </div>
-        </div>
         <div className="navbar-center">
-          <Link to={"/"} className="btn btn-ghost text-xl">
-            Welcome To Cart Section
+          <Link to={"/"} className="btn btn-ghost text-red-500 text-3xl">
+            Bazzar
           </Link>
         </div>
         <div className="navbar-end">
+          <h1 className="text-2xl text-emerald-500">Welcome In cart Section</h1>
+          <img className="h-11" src="https://www.animatedimages.org/data/media/839/animated-nepal-flag-image-0007.gif" alt="Jai Nepal" />
           <div className="dropdown absolute right-4 top-2 mb-72">
-            <div tabIndex={0} role="button" className="btn m-1">
-              Theme
+            <div tabIndex={0} role="button" className="btn ml-48">
+              List
               <svg
                 width="12px"
                 height="12px"
@@ -64,77 +73,97 @@ export default function CartSection() {
             </div>
             <ul
               tabIndex={0}
-              className="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl"
+              className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
             >
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  className="theme-controller w-full btn btn-sm  btn-ghost justify-start"
-                  aria-label="Default"
-                  value="default"
-                />
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  className="theme-controller w-full btn btn-sm  btn-ghost justify-start"
-                  aria-label="Retro"
-                  value="retro"
-                />
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  className="theme-controller w-full btn btn-sm btn-ghost justify-start"
-                  aria-label="Cyberpunk"
-                  value="cyberpunk"
-                />
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  className="theme-controller w-full btn btn-sm  btn-ghost justify-start"
-                  aria-label="Valentine"
-                  value="valentine"
-                />
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  className="theme-controller w-full btn btn-sm  btn-ghost justify-start"
-                  aria-label="Aqua"
-                  value="aqua"
-                />
-              </li>
+              {cartBox.length > 0 ? (
+                cartBox.map((val) => {
+                  return (
+                    <li key={val.id} className="hover:bg-base-300 pl-2">
+                      {val.title}
+                    </li>
+                  );
+                })
+              ) : (
+                <p>First Select Any Items</p>
+              )}
             </ul>
           </div>
         </div>
       </div>
 
-      <div className="Container-Cart w-xl">
-        <div className="hero bg-base-200">
-          <div className="hero-content flex-col lg:flex-row-reverse">
-            <img
-              src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
-              className="max-w-sm rounded-lg shadow-2xl"
-            />
-            <div>
-              <h1 className="text-3xl font-medium">Box Office News!</h1>
-              <p className="py-4">
-                Provident cupiditate voluptatem et in. Quaerat fugiat ut
-                assumenda excepturi exercitationem quasi. In deleniti eaque aut
-                repudiandae et a id nisi.
-              </p>
-              <button className="btn btn-primary">Get Started</button>
+      <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-5 gap-x-5 justify-center items-center  w-screen">
+        {cartBox.length > 0 ? (
+          cartBox.map((val, index) => {
+            return (
+              <div
+                key={index}
+                className="card z-5 bg-gray-100 w-72 shadow-md p-3"
+              >
+                <figure>
+                  <img
+                    src={val?.thumbnail}
+                    alt="Shoes"
+                    className="h-64 w-full object-cover"
+                  />
+                </figure>
+                <div className="card-body p-2 ">
+                  <h2 className="card-title text-sm">{val.title}</h2>
+                  <p className="text-xs text-black">{val.description}</p>
+                  <div className="card-actions justify-end">
+                    <p className="font-bold text-black">$ {val.price}</p>
+                    <button
+                      onClick={() => {
+                        deletingFun(val);
+                        toast.warning("Sucessfully Deleted")
+                      }}
+                      className="btn bg-red-500 btn-sm btn-primary"
+                    >
+                      Delete
+                    </button>
+                    <button
+                    onClick={()=>{toast.success("Sorry Dont Be Serious Its Dummy Website")}}
+                    className="btn btn-sm btn-primary">Buy</button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <h1 className="text-4xl text-red-500">No Data Found</h1>
+        )}
+      </div>
+      <footer className="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
+        <aside>
+          <p>
+            Copyright © {new Date().getFullYear()} - All right reserved by ACME
+            Industries Ltd
+          </p>
+        </aside>
+        {/* The button to open modal */}
+        <a href="#my_modal_8" className="btn">
+          Information
+        </a>
+
+        {/* Put this part before </body> tag */}
+        <div className="modal" role="dialog" id="my_modal_8">
+          <div className="modal-box">
+            <h3 className="text-lg font-bold">Offer Only For You !!!</h3>
+            <p className="py-4">Buy More Than $1000 and Get 10% Discount</p>
+            <p className="py-4 bg-amber-300 text-xl">Total Amount = $ {amount}</p>
+            {amount >1000 ? 
+           <p className="py-4 bg-green-500 text-xl">With Discount You Have To Pay  = $ {discountAmount}</p>
+            :
+            <h1>Buy More than $1000 Then You Able To received Discount</h1>
+            }
+           
+            <div className="modal-action">
+              <a href="#" className="btn">
+                Close
+              </a>
             </div>
           </div>
         </div>
-      </div>
+      </footer>
     </>
   );
 }

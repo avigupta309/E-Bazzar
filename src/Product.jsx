@@ -1,9 +1,12 @@
 import axios from "axios";
 import "react-notifications/lib/notifications.css";
-import { useEffect, useState } from "react";
-
+import { useContext, useEffect, useState } from "react";
+import { ContextApi } from "../context/ContextApi";
+import { toast } from "react-toastify";
 // eslint-disable-next-line react/prop-types
-export default function Product({ submittedSearch, setselectedCart }) {
+export default function Product({ submittedSearch }) {
+  const { setCartList, cartList } = useContext(ContextApi);
+
   const [category, setCategory] = useState([]);
   const [menu, setMenu] = useState(false);
 
@@ -16,11 +19,19 @@ export default function Product({ submittedSearch, setselectedCart }) {
   }, []);
 
   const [items, setItems] = useState([]);
-  
-  function cartFun(data) {
-    setselectedCart(data);
 
+  function cartFun(data) {
+    const itemExists = cartList.some((val) => val.title === data.title);
+    if (itemExists) {
+   toast.error(`${data.title} has already added in your cart`)
+    }else {
+     setCartList((prev) => [...prev, data]);
+     const newCart=[...cartList,data]
+     toast.success(`${data.title} Sucessfully added in cart`)
+     localStorage.setItem('items',JSON.stringify(newCart))
+    }
   }
+
 
   useEffect(() => {
     axios
@@ -54,18 +65,16 @@ export default function Product({ submittedSearch, setselectedCart }) {
 
   let productItems = items.map((val, index) => {
     return (
-      <div key={index} className="card z-5 bg-gray-100 w-72 shadow-md p-3">
+      <div key={index} className="card z-5 bg-gray-100  shadow-md p-3">
         <figure>
-          <img
-            src={val?.thumbnail}
-            alt="Shoes"
-            className="h-64 w-full object-cover"
-          />
+          <img src={val?.thumbnail} alt="Shoes" className="h-64 object-cover" />
         </figure>
         <div className="card-body p-2 ">
-          <h2 className="card-title text-sm">{val.title}</h2>
+          <h2 className="card-title text-sm text-black font-semibold">
+            {val.title}
+          </h2>
           <p className="text-xs text-black">{val.description}</p>
-          <div className="card-actions justify-end">
+          <div className="card-actions justify-end ">
             <p className="font-bold text-black">$ {val.price}</p>
             <button
               onClick={() => {
@@ -116,8 +125,8 @@ export default function Product({ submittedSearch, setselectedCart }) {
         </div>
 
         <div className="container">
-          <img className="Advertisement" src="bg-image.jpg" />
-          <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-5 gap-x-5 justify-center items-center  w-screen">
+          <img className="Advertisement " src="bg-image.jpg" />
+          <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-5 gap-x-5 justify-center items-center sm:w-screen">
             {productItems}
           </div>
         </div>

@@ -1,54 +1,47 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { ContextApi } from "../context/ContextApi";
 
-// eslint-disable-next-line react/prop-types
-export default function CartSection({ cartData = [], setDeleting }) {
-  const [cartBox, setCartBox] = useState([]);
-  // const[deleting,setDeleting]=useState();
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("storeCartItems"));
-    if (storedCart) {
-      setCartBox(storedCart);
-    }
-  }, []);
-  useEffect(() => {
-    if (cartData.length > 0) {
-      setCartBox(cartData);
-      localStorage.setItem("storeCartItems", JSON.stringify(cartBox));
-    }
-  }, [cartData, cartBox]);
+export default function CartSection() {
+  const {cartList,setCartList,amount,setAmount}=useContext(ContextApi)
+
 
   function deletingFun(val) {
-    //setDeleting(val.id)
-    const afterDeletingCart = cartBox.filter((data) => data.id !== val.id);
-    setCartBox(afterDeletingCart);
-    localStorage.setItem("storeCartItems", JSON.stringify(afterDeletingCart));
-    setDeleting(afterDeletingCart);
+    const afterDeletingCart = cartList.filter((data) => data.id !== val.id);
+    setCartList(afterDeletingCart);
+    localStorage.setItem('items',JSON.stringify(afterDeletingCart))
+     
   }
-  const [amount, setAmount] = useState(0);
-  const[discountAmount,setDiscountAmount]=useState(0)
-  useEffect(() => {
-    if (cartBox.length > 0) {
-      const totalAmount = cartBox.reduce((acc, val) => acc + val.price, 0);
-      setAmount(parseFloat(totalAmount.toFixed(2)));
-    } else {
-      setAmount(0); // Reset when cart is empty
-    }
-   
-  }, [cartBox]);
 
   useEffect(()=>{
-    if(amount>=1000){
-      const discountRate=amount/10
-      const actualAmount=amount-(parseFloat(discountRate.toFixed(2)))
-      setDiscountAmount(actualAmount)
-
+    const storedCartItems=JSON.parse(localStorage.getItem("items"))
+    if(storedCartItems.length>0){
+      setCartList(storedCartItems)
     }
-  },[amount])
+  },[])
+
+  const [discountAmount, setDiscountAmount] = useState(0);
+  useEffect(() => {
+    if (cartList.length > 0) {
+      const totalAmount = cartList.reduce((acc, val) => acc + val.price, 0);
+      setAmount(parseFloat(totalAmount.toFixed(2)));
+    } else {
+      setAmount(0);
+    }
+  }, [cartList]);
+
+  useEffect(() => {
+    if (amount >= 1000) {
+      const discountRate = amount / 10;
+      const actualAmount = amount - parseFloat(discountRate.toFixed(2));
+      setDiscountAmount(actualAmount);
+    }
+  }, [amount]);
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       <div className="navbar bg-yellow-400 shadow-sm">
         <div className="navbar-center">
           <Link to={"/"} className="btn btn-ghost text-red-500 text-3xl">
@@ -57,7 +50,11 @@ export default function CartSection({ cartData = [], setDeleting }) {
         </div>
         <div className="navbar-end">
           <h1 className="text-2xl text-emerald-500">Welcome In cart Section</h1>
-          <img className="h-11" src="https://www.animatedimages.org/data/media/839/animated-nepal-flag-image-0007.gif" alt="Jai Nepal" />
+          <img
+            className="h-11"
+            src="https://www.animatedimages.org/data/media/839/animated-nepal-flag-image-0007.gif"
+            alt="Jai Nepal"
+          />
           <div className="dropdown absolute right-4 top-2 mb-72">
             <div tabIndex={0} role="button" className="btn ml-48">
               List
@@ -75,11 +72,11 @@ export default function CartSection({ cartData = [], setDeleting }) {
               tabIndex={0}
               className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
             >
-              {cartBox.length > 0 ? (
-                cartBox.map((val) => {
+              {cartList.length > 0 ? (
+                cartList.map((val) => {
                   return (
                     <li key={val.id} className="hover:bg-base-300 pl-2">
-                      {val.title}
+                      {val.title} 
                     </li>
                   );
                 })
@@ -92,8 +89,8 @@ export default function CartSection({ cartData = [], setDeleting }) {
       </div>
 
       <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-5 gap-x-5 justify-center items-center  w-screen">
-        {cartBox.length > 0 ? (
-          cartBox.map((val, index) => {
+        {cartList.length > 0 ? (
+          cartList.map((val, index) => {
             return (
               <div
                 key={index}
@@ -114,15 +111,22 @@ export default function CartSection({ cartData = [], setDeleting }) {
                     <button
                       onClick={() => {
                         deletingFun(val);
-                        toast.warning("Sucessfully Deleted")
+                        toast.warning("Sucessfully Deleted");
                       }}
                       className="btn bg-red-500 btn-sm btn-primary"
                     >
                       Delete
                     </button>
                     <button
-                    onClick={()=>{toast.success("Sorry Dont Be Serious Its Dummy Website")}}
-                    className="btn btn-sm btn-primary">Buy</button>
+                      onClick={() => {
+                        toast.success(
+                          "Sorry Dont Be Serious Its Dummy Website"
+                        );
+                      }}
+                      className="btn btn-sm btn-primary"
+                    >
+                      Buy
+                    </button>
                   </div>
                 </div>
               </div>
@@ -135,27 +139,29 @@ export default function CartSection({ cartData = [], setDeleting }) {
       <footer className="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4">
         <aside>
           <p>
-            Copyright © {new Date().getFullYear()} - All right reserved by ACME
+            Copyright © {new Date().toTimeString()} - All right reserved by Bazzar
             Industries Ltd
           </p>
         </aside>
-        {/* The button to open modal */}
         <a href="#my_modal_8" className="btn">
           Information
         </a>
 
-        {/* Put this part before </body> tag */}
         <div className="modal" role="dialog" id="my_modal_8">
           <div className="modal-box">
             <h3 className="text-lg font-bold">Offer Only For You !!!</h3>
             <p className="py-4">Buy More Than $1000 and Get 10% Discount</p>
-            <p className="py-4 bg-amber-300 text-xl">Total Amount = $ {amount}</p>
-            {amount >1000 ? 
-           <p className="py-4 bg-green-500 text-xl">With Discount You Have To Pay  = $ {discountAmount}</p>
-            :
-            <h1>Buy More than $1000 Then You Able To received Discount</h1>
-            }
-           
+            <p className="py-4 bg-amber-300 text-xl">
+              Total Amount = $ {amount}
+            </p>
+            {amount > 1000 ? (
+              <p className="py-4 bg-green-500 text-xl">
+                With Discount You Have To Pay = $ {discountAmount.toFixed(2)}
+              </p>
+            ) : (
+              <h1>Buy More than $1000 Then You Able To received Discount</h1>
+            )}
+
             <div className="modal-action">
               <a href="#" className="btn">
                 Close

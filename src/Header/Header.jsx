@@ -1,32 +1,18 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
+import { ContextApi } from "../../context/ContextApi";
 
 // eslint-disable-next-line react/prop-types
-export default function Header({ setSubmittedSearch, selectedCart,setCartData ,deleting}) {
+export default function Header({ setSubmittedSearch }) {
+  const { cartList, amount, setAmount } = useContext(ContextApi);
+
   const [searchValue, setSearchValue] = useState("");
-  const [cartItems, setCartItems] = useState([]);
-  const [amount, setAmount] = useState(0);
 
   useEffect(() => {
-    const storedCartItems = JSON.parse(localStorage.getItem("items"));
-    if (storedCartItems) {
-      setCartItems(storedCartItems);
-      setCartData(storedCartItems)
-    }
-  }, []);
-
-  useEffect(()=>{
-    if(deleting!==undefined){
-       setCartItems(deleting)
-    }
-  },[deleting])
- 
-
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      localStorage.setItem("items", JSON.stringify(cartItems));
-      const validCartItems = cartItems.filter(
+    if (cartList.length > 0) {
+      const validCartItems = cartList.filter(
         (val) => val && val.price !== undefined
       );
       const totalAmount = validCartItems.reduce(
@@ -34,27 +20,9 @@ export default function Header({ setSubmittedSearch, selectedCart,setCartData ,d
         0
       );
       setAmount(parseFloat(totalAmount.toFixed(2)));
-      setCartData(cartItems)
+      setAmount(totalAmount.toFixed(2));
     }
-  }, [cartItems]);
-  // console.log(cartItems)
-
-  useEffect(() => {
-    
-    if (selectedCart !== "") {
-      const check = cartItems.find((val) => val == selectedCart);
-      if (check) {
-        toast.error("You Have Already Added In Cart ")
-      } else {
-        setCartItems([...cartItems, selectedCart]);
-        setTimeout(() => {
-          toast.success(cartItems.title+" Successfully Added!");
-        }, 100);
-        
-      }
-    }
-    //eslint-disable-next-line
-  }, [selectedCart]);
+  }, [cartList]);
 
   function searchFun(data) {
     data.preventDefault();
@@ -62,24 +30,24 @@ export default function Header({ setSubmittedSearch, selectedCart,setCartData ,d
   }
   return (
     <>
-    <ToastContainer/>
-      <header className=" sticky top-0 z-10 w-screen">
+      <ToastContainer />
+      <header className=" sticky top-0 z-10 w-md md:w-fit">
         <nav className="mb-5 w-full">
-          <div className="navbar bg-yellow-500 p-6 shadow-sm  flex justify-between">
+          <div className="navbar bg-yellow-500  p-6 shadow-sm ">
             <div className="flex  items-center ">
               <Link to={"/"}>
                 <h1
                   onClick={() => {
                     window.location.reload();
                   }}
-                  className="btn btn-ghost text-2xl text-red-500 lg:ml-[10rem] ml-[5rem] mr-5"
+                  className="btn btn-ghost text-2xl text-red-500 lg:ml-[10rem] ml-[5rem] mr-3"
                 >
                   Bazzar
                 </h1>
               </Link>
 
               <form onSubmit={searchFun}>
-                <label className="input">
+                <label className="input w-28 sm:w-2xs ">
                   <svg
                     className="h-[1em] opacity-50"
                     xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +56,7 @@ export default function Header({ setSubmittedSearch, selectedCart,setCartData ,d
                     <g
                       strokeLinejoin="round"
                       strokeLinecap="round"
-                      strokeWidth="2.5"
+                      strokeWidth="2"
                       fill="none"
                       stroke="currentColor"
                     >
@@ -111,7 +79,7 @@ export default function Header({ setSubmittedSearch, selectedCart,setCartData ,d
             </div>
             <marquee>
               {" "}
-              <h1 className="mr-13 text-blue-900 text-xl">
+              <h1 className="mr-13 text-blue-900 text-xl hidden sm:block">
                 Bazaar ki galiyon mein, sapne bikte hain. Har cheez ki hai apni
                 ek kahani, kuch nayi, kuch purani
               </h1>
@@ -121,27 +89,27 @@ export default function Header({ setSubmittedSearch, selectedCart,setCartData ,d
                 <div
                   tabIndex={0}
                   role="button"
-                  className="btn btn-ghost btn-circle"
+                  className="btn btn-ghost btn-circle sm:bg-yellow-500 "
                 >
-                  <div className="indicator mr-6">
+                  <div className="indicator mr-20 sm:mr-6">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-10 w-20 mr-20  bg-yellow-500 "
+                      className="h-10 w-20 mr-20 bg-yellow-500 "
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
                       {" "}
                       <path
-                        className="bg-red-600"
+                        className="text-black text-[2px] absolute mr-[10px] "
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth="2"
+                        strokeWidth="1.3"
                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                      />{" "}
+                      />
                     </svg>
                     <span className="badge badge-sm indicator-item font-bold mr-24">
-                      {cartItems.length}
+                      {cartList.length}
                     </span>
                   </div>
                 </div>
@@ -151,7 +119,7 @@ export default function Header({ setSubmittedSearch, selectedCart,setCartData ,d
                 >
                   <div className="card-body">
                     <span className="text-lg font-bold">
-                      {cartItems.length} Items
+                      {cartList.length} Items
                     </span>
                     <span className="text-info">Subtotal: $ {amount}</span>
                     <div className="card-actions">
